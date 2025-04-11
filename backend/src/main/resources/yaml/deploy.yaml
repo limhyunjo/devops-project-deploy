@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bucams-api-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bucams-api
+  template:
+    metadata:
+      labels:
+        app: bucams-api
+    spec:
+      initContainers:
+        - name: wait-for-mariadb
+          image: busybox
+          command: [ 'sh', '-c', 'until nc -z mariadb-service 3306; do echo waiting for mariadb...; sleep 2; done;' ]
+      containers:
+      - name: bucams-api
+        image: limhyunjo/bucams-api:1.0
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        ports:
+        - containerPort: 8080
+        startupProbe: 
+          httpGet: 
+            path: /actuator/health
+            port: 8080
+          failureThreshold: 10
+          periodSeconds: 10
+        livenessProbe: 
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 10  
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 5

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
+  baseURL: 'https://beyond.bucams-api.com:30426/api/v1',
   timeout: 1000,
 });
 
