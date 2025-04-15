@@ -35,8 +35,8 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE_NAME = 'village1031/bucams-api'
-        DOCKER_IMAGE_NAME_FRONTEND = 'village1031/bucams-vue'
+        DOCKER_IMAGE_NAME = 'limhyunjo/bucams-api'
+        DOCKER_IMAGE_NAME_FRONTEND = 'limhyunjo/bucams-vue'
         DOCKER_CREDENTIALS_ID = 'dockerhub-access'
     }
 
@@ -111,18 +111,18 @@ pipeline {
             }
         }
 
-        stage('Trigger bucams-k8s-manifests') {
-            steps {
-                script {
-                    def dockerImageVersion = "${env.BUILD_NUMBER}"
-                    withEnv(["DOCKER_IMAGE_VERSION=${dockerImageVersion}"]) {
-                        build job: 'bucams-k8s-manifests',
-                          parameters: [
-                              string(name: 'DOCKER_IMAGE_VERSION', value: "${DOCKER_IMAGE_VERSION}")
-                          ],
-                          wait: true
-                    }
-                }
-            }
-        }
+//         stage('Trigger bucams-k8s-manifests') {
+//             steps {
+//                 script {
+//                     def dockerImageVersion = "${env.BUILD_NUMBER}"
+//                     withEnv(["DOCKER_IMAGE_VERSION=${dockerImageVersion}"]) {
+//                         build job: 'bucams-k8s-manifests',
+//                           parameters: [
+//                               string(name: 'DOCKER_IMAGE_VERSION', value: "${DOCKER_IMAGE_VERSION}")
+//                           ],
+//                           wait: true
+//                     }
+//                 }
+//             }
+//         }
     }
